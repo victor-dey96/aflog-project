@@ -7,6 +7,15 @@ function App() {
   const [author, setAuthor] = useState("");
   const [text, setText] = useState("");
   const [essayList, setEssayList] = useState([]);
+  const [time, setTime] = useState();
+
+  useEffect(() => {
+    const updateTime = new Date();
+    setTime(updateTime);
+    console.log(updateTime);
+  }, []);
+
+  // console.log(updateTime);
 
   const addData = () => {
     console.log(title);
@@ -15,8 +24,13 @@ function App() {
         "http://localhost:4000/Essays", //POST request endpoint
         { title: title, author: author, text: text } //data for POST request using state, inside object as key-value pairs
       )
-      .then(() => {
-        console.log("done!"); //doing after post request
+      .then((response) => {
+        setEssayList(response.data); //doing after get request
+        setTitle("");
+        setAuthor("");
+        setText("");
+        setTime();
+        console.log(time);
       });
   };
 
@@ -33,15 +47,20 @@ function App() {
   const deleteEntry = (id) => {
     //taking id as parameter
     console.log("deleted!");
-    axios.delete(`http://localhost:4000/Essays/${id}`).catch((err) => {
-      // deleting by particular id
-      alert("Something went wrong!");
-    });
+    axios
+      .delete(`http://localhost:4000/Essays/${id}`)
+      .then((response) => {
+        setEssayList(response.data); //doing after get request
+      })
+      .catch((err) => {
+        // deleting by particular id
+        alert("Something went wrong!");
+      });
   };
 
-  const editEntry = (id, title, text, author) => {
-    console.log(id, title, text, author);
-  };
+  // const editEntry = (id, title, text, author) => {
+  //   console.log(id, title, text, author);
+  // };
 
   return (
     <div className="App">
@@ -53,6 +72,7 @@ function App() {
           onChange={(e) => {
             setTitle(e.target.value);
           }}
+          value={title}
         />
         <label>Author</label>
         <input
@@ -61,6 +81,7 @@ function App() {
           onChange={(e) => {
             setAuthor(e.target.value);
           }}
+          value={author}
         />
         <label>Text</label>
         <textarea
@@ -69,6 +90,7 @@ function App() {
           onChange={(e) => {
             setText(e.target.value);
           }}
+          value={text}
         />
         <div className="buttons">
           <button onClick={addData}>Add</button>
@@ -90,13 +112,6 @@ function App() {
                 >
                   Delete
                 </Button>
-                {/* <button
-                  onClick={() =>
-                    editEntry(val.idessays, val.title, val.text, val.author)
-                  }
-                >
-                  Edit
-                </button> */}
               </div>
             </div>
           );

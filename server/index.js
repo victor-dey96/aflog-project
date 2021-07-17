@@ -18,15 +18,25 @@ app.post("/Essays", (req, res) => {
   const title = req.body.title;
   const author = req.body.author;
   const text = req.body.text; //data from frontend
-
+  const updateTime = new Date();
   db.query(
-    "INSERT INTO essays (title, author, text) VALUES(?,?,?)",
-    [title, author, text],
+    // "INSERT INTO essays (title, author, text) VALUES(?,?,?)",
+    // [title, author, text],
+    "INSERT INTO essays (title, author, text, updated_at) VALUES(?,?,?,?)", //Inside bracket, mysql column name
+    [title, author, text, updateTime], //inside bracket, js data
     (err, result) => {
       if (err) {
         console.log(err);
       } else {
-        res.send("Values Inserted");
+        db.query("SELECT * FROM essays", (err, result) => {
+          // fetching data from db
+          if (err) {
+            console.log(err);
+          } else {
+            console.log(result);
+            res.send(result);
+          }
+        });
       }
     }
   );
@@ -54,7 +64,15 @@ app.delete("/Essays/:id", (req, res) => {
       if (err) {
         console.log(err);
       } else {
-        res.send("delete success");
+        db.query("SELECT * FROM essays", (err, result) => {
+          // fetching data from db
+          if (err) {
+            console.log(err);
+          } else {
+            console.log(result);
+            res.send(result);
+          }
+        });
       }
     }
   );

@@ -7,15 +7,7 @@ function App() {
   const [author, setAuthor] = useState("");
   const [text, setText] = useState("");
   const [essayList, setEssayList] = useState([]);
-  const [time, setTime] = useState();
-
-  useEffect(() => {
-    const updateTime = new Date();
-    setTime(updateTime);
-    console.log(updateTime);
-  }, []);
-
-  // console.log(updateTime);
+  const [time, setTime] = useState({});
 
   const addData = () => {
     console.log(title);
@@ -26,11 +18,6 @@ function App() {
       )
       .then((response) => {
         setEssayList(response.data); //doing after get request
-        setTitle("");
-        setAuthor("");
-        setText("");
-        setTime();
-        console.log(time);
       });
   };
 
@@ -61,6 +48,8 @@ function App() {
   // const editEntry = (id, title, text, author) => {
   //   console.log(id, title, text, author);
   // };
+
+  console.log(...essayList);
 
   return (
     <div className="App">
@@ -105,6 +94,8 @@ function App() {
               <div className="result_title">{val.title}</div>
               <div className="result_author"> By: {val.author} </div>
               <div className="result_text"> {val.text} </div>
+              <div></div>
+              <div>Created At: {val.updated_at}</div>
               <div className="small_buttons">
                 <Button
                   color="primary"
